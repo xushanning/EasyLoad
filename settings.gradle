@@ -1,0 +1,3 @@
+include ':easyload'
+include ':app'
+rootProject.name = "EasyLoad"
