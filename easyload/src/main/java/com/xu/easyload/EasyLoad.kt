@@ -1,5 +1,8 @@
 package com.xu.easyload
 
+import android.app.Activity
+import android.view.View
+import androidx.fragment.app.Fragment
 import com.xu.easyload.listener.OnReloadListener
 import com.xu.easyload.listener.OnStateChangeListener
 import com.xu.easyload.service.ILoadService
@@ -23,7 +26,7 @@ class EasyLoad private constructor() {
         /**
          * 单例
          */
-        val instance: EasyLoad by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        private val instance: EasyLoad by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             EasyLoad()
         }
 
@@ -56,16 +59,36 @@ class EasyLoad private constructor() {
     }
 
     /**
-     * 注入
-     * @param target 目标，只能是View、Fragment、Activity中的一种
+     * 注入Activity
+     * @param target 目标Activity
      */
-    fun inject(target: Any): ILoadService {
+    fun inject(target: Activity): ILoadService {
+        return LoadService(target, resetLocalState())
+    }
+
+    /**
+     * 注入View
+     * @param target 目标View
+     */
+    fun inject(target: View): ILoadService {
+        return LoadService(target, resetLocalState())
+    }
+
+    /**
+     * 注入Fragment
+     * @param target 目标Fragment
+     */
+    fun inject(target: Fragment): ILoadService {
+        return LoadService(target, resetLocalState())
+    }
+
+    private fun resetLocalState(): Builder {
         val cloneBuilder = builder.copy()
         builder.localDefaultState = null
         builder.onReloadListener = null
         builder.onStateChangeListener = null
         builder.localStates.clear()
-        return LoadService(target, cloneBuilder)
+        return cloneBuilder
     }
 
     /**
@@ -101,9 +124,23 @@ class EasyLoad private constructor() {
         }
 
         /**
-         * 注入
+         * 注入 Activity
          */
-        fun inject(target: Any): ILoadService {
+        fun inject(target: Activity): ILoadService {
+            return instance.inject(target)
+        }
+
+        /**
+         * 注入 Fragment
+         */
+        fun inject(target: Fragment): ILoadService {
+            return instance.inject(target)
+        }
+
+        /**
+         * 注入 View
+         */
+        fun inject(target: View): ILoadService {
             return instance.inject(target)
         }
     }
@@ -199,7 +236,6 @@ class EasyLoad private constructor() {
         internal fun setOnReloadListener(onReloadListener: OnReloadListener) = apply {
             this.onReloadListener = onReloadListener
         }
-
 
 
         /**
