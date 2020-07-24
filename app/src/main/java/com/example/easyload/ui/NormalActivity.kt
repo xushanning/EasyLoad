@@ -1,15 +1,11 @@
 package com.example.easyload.ui
 
-import android.view.View
 import com.example.easyload.BaseActivity
 import com.example.easyload.DelayUtil
 import com.example.easyload.R
 import com.example.easyload.states.ErrorState
 import com.example.easyload.states.PlaceHolderState
 import com.xu.easyload.EasyLoad
-import com.xu.easyload.listener.OnReloadListener
-import com.xu.easyload.service.ILoadService
-import com.xu.easyload.state.BaseState
 
 /**
  * @author 言吾許
@@ -25,12 +21,17 @@ class NormalActivity : BaseActivity() {
                 .setLocalDefaultState(PlaceHolderState::class.java)
 //                .addLocalState()
 //                .addLocalState()
-                .setOnReloadListener(object : OnReloadListener {
-                    override fun onReload(iLoadService: ILoadService, clickState: BaseState, view: View) {
+                .setOnReloadListener { iLoadService, clickState, view ->
+
+                }
+                .setOnStateChangeListener { view, currentState ->
+
+                }
+                .inject(this) {
+                    setOnReloadListener { iLoadService, clickState, view ->
 
                     }
-                })
-                .inject(this)
+                }
         DelayUtil.delay(service, ErrorState::class.java, 4000)
     }
 }

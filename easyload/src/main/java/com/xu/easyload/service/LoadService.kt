@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import com.xu.easyload.EasyLoad
-import com.xu.easyload.listener.OnStateChangeListener
 import com.xu.easyload.state.BaseState
 import com.xu.easyload.state.SuccessState
 
@@ -45,7 +44,8 @@ class LoadService : ILoadService {
      * 除去成功的当前的view
      */
     private var currentOtherStateView: View? = null
-    private var onStateChangedListener: OnStateChangeListener? = null
+
+    private var onStateChangedListener: ((view: View, currentState: BaseState) -> Unit)? = null
 
     /**
      * 是否需要特殊处理
@@ -137,7 +137,7 @@ class LoadService : ILoadService {
      * 成功
      */
     override fun showSuccess() {
-      showState(SuccessState::class.java)
+        showState(SuccessState::class.java)
     }
 
     /**
@@ -151,7 +151,7 @@ class LoadService : ILoadService {
         //核心
         val state = mStates[clState]
         val view = state!!.getView(this, state)
-        onStateChangedListener?.onStateChange(view, state)
+        onStateChangedListener?.invoke(view, state)
         if (state is SuccessState) {
             //成功->移除状态view
             container.removeView(currentOtherStateView)

@@ -3,12 +3,9 @@ package com.xu.easyload
 import android.app.Activity
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.xu.easyload.listener.OnReloadListener
-import com.xu.easyload.listener.OnStateChangeListener
 import com.xu.easyload.service.ILoadService
 import com.xu.easyload.service.LoadService
 import com.xu.easyload.state.BaseState
-import com.xu.easyload.listener.MyListener
 import java.io.*
 import java.util.*
 
@@ -112,15 +109,23 @@ class EasyLoad private constructor() {
         /**
          * 设置重新加载监听
          */
-        fun setOnReloadListener(onReloadListener: OnReloadListener) = apply {
+        fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) = apply {
             builder.setOnReloadListener(onReloadListener)
         }
 
         /**
          * 设置重新加载监听
          */
-        fun setOnStateChangeListener(onStateChangeListener: OnStateChangeListener) = apply {
+        fun setOnStateChangeListener(onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)) = apply {
             builder.setOnStateChangeListener(onStateChangeListener)
+        }
+
+        /**
+         * 注入 Activity
+         */
+        inline fun inject(target: Activity, func: LocalBuilder.() -> Unit): ILoadService = run {
+            this.func()
+            inject(target)
         }
 
         /**
@@ -133,8 +138,24 @@ class EasyLoad private constructor() {
         /**
          * 注入 Fragment
          */
+        inline fun inject(target: Fragment, func: LocalBuilder.() -> Unit): ILoadService = run {
+            this.func()
+            inject(target)
+        }
+
+        /**
+         * 注入 Fragment
+         */
         fun inject(target: Fragment): ILoadService {
             return instance.inject(target)
+        }
+
+        /**
+         * 注入 View
+         */
+        inline fun inject(target: View, func: LocalBuilder.() -> Unit): ILoadService = run {
+            this.func()
+            inject(target)
         }
 
         /**
@@ -189,12 +210,13 @@ class EasyLoad private constructor() {
         /**
          * 重新加载监听
          */
-        var onReloadListener: OnReloadListener? = null
+        var onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null
+
 
         /**
          * 状态改变监听
          */
-        internal var onStateChangeListener: OnStateChangeListener? = null
+        internal var onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)? = null
 
         /**
          * 添加全局的state
@@ -233,7 +255,7 @@ class EasyLoad private constructor() {
         /**
          * 设置重新加载监听
          */
-        internal fun setOnReloadListener(onReloadListener: OnReloadListener) = apply {
+        internal fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) = apply {
             this.onReloadListener = onReloadListener
         }
 
@@ -241,7 +263,7 @@ class EasyLoad private constructor() {
         /**
          * 设置重新加载监听
          */
-        internal fun setOnStateChangeListener(onStateChangeListener: OnStateChangeListener) = apply {
+        internal fun setOnStateChangeListener(onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)) = apply {
             this.onStateChangeListener = onStateChangeListener
         }
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
-import com.xu.easyload.listener.OnReloadListener
 import com.xu.easyload.service.ILoadService
 import java.io.Serializable
 
@@ -14,7 +13,7 @@ import java.io.Serializable
 abstract class BaseState : Serializable {
     private var view: View? = null
     private var context: Context? = null
-    private var onReloadListener: OnReloadListener? = null
+    private var onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null
 
     companion object {
         /**
@@ -25,14 +24,14 @@ abstract class BaseState : Serializable {
 
     constructor()
 
-    constructor(view: View, context: Context, onReloadListener: OnReloadListener? = null) {
+    constructor(view: View, context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) {
         this.view = view
         this.context = context
         this.onReloadListener = onReloadListener
     }
 
 
-    fun initView(context: Context, onReloadListener: OnReloadListener? = null) {
+    fun initView(context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) {
         this.context = context
         this.onReloadListener = onReloadListener
     }
@@ -52,7 +51,7 @@ abstract class BaseState : Serializable {
         view?.setOnClickListener {
             if (canReloadable()) {
                 Log.d("点击", (onReloadListener == null).toString())
-                onReloadListener?.onReload(loadService, currentState, it)
+                onReloadListener?.invoke(loadService, currentState, it)
             }
         }
 
@@ -75,7 +74,7 @@ abstract class BaseState : Serializable {
     /**
      * 设置重新加载监听
      */
-    fun setOnReloadListener(onReloadListener: OnReloadListener) {
+    fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) {
         this.onReloadListener = onReloadListener
     }
 
