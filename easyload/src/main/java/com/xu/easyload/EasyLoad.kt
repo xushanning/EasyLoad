@@ -190,27 +190,28 @@ class EasyLoad private constructor() {
         /**
          * 全局的status
          */
-        val globalStates: MutableList<BaseState> = ArrayList()
+        internal val globalStates: MutableList<BaseState> = ArrayList()
+
 
         /**
          * 局部status
          */
-        val localStates: MutableList<BaseState> = ArrayList()
+        internal val localStates: MutableList<BaseState> = ArrayList()
 
         /**
          * 默认的全局status
          */
-        var globalDefaultState: Class<out BaseState>? = null
+        internal var globalDefaultState: Class<out BaseState>? = null
 
         /**
          * 默认的局部status
          */
-        var localDefaultState: Class<out BaseState>? = null
+        internal var localDefaultState: Class<out BaseState>? = null
 
         /**
          * 重新加载监听
          */
-        var onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null
+        internal var onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null
 
 
         /**

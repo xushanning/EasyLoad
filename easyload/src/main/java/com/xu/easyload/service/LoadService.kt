@@ -2,6 +2,8 @@ package com.xu.easyload.service
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +29,9 @@ class LoadService : ILoadService {
         initFragmentTarget(target, builder)
     }
 
-    private lateinit var container: ViewGroup
+    private lateinit var parentView: ViewGroup
+
+    private lateinit var mContext: Context
 
     /**
      * 目标view的params
@@ -54,10 +58,9 @@ class LoadService : ILoadService {
 
 
     private fun initActivityTarget(target: Activity, builder: EasyLoad.Builder) {
-
-        container = target.findViewById(android.R.id.content)
+        parentView = target.findViewById(android.R.id.content)
         //activity初始化状态就一个view
-        val originalView = container.getChildAt(0)
+        val originalView = parentView.getChildAt(0)
         //originalLayoutParams = originalView.layoutParams
         initStates(builder, originalView, target)
     }
@@ -74,22 +77,22 @@ class LoadService : ILoadService {
             //constraintLayout和RelativeLayout特殊处理
             needSpecialHandle = true
             targetParams = target.layoutParams
-            container = parentViewGroup
+            parentView = parentViewGroup
         } else {
             val index = parentViewGroup.indexOfChild(target)
-            container = FrameLayout(target.context)
-            container.layoutParams = target.layoutParams
+            parentView = FrameLayout(target.context)
+            parentView.layoutParams = target.layoutParams
             parentViewGroup.removeView(target)
-            parentViewGroup.addView(container, index)
+            parentViewGroup.addView(parentView, index)
             val childParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            container.addView(target, childParams)
+            parentView.addView(target, childParams)
         }
         initStates(builder, target, mContext)
     }
 
 
     private fun initStates(builder: EasyLoad.Builder, originalView: View, mContext: Context) {
-
+        this.mContext = mContext
         val globalStates = builder.globalStates
         val localStates = builder.localStates
         val reloadListener = builder.onReloadListener
@@ -115,9 +118,10 @@ class LoadService : ILoadService {
         //只要是localDefaultState不为空，那么local生效
         if (localDefaultState != null) {
             showDefault(localDefaultState)
+            return;
         }
         //只有local为null，并且global不为null的情况下，global才生效
-        if (globalDefaultState != null && localDefaultState == null) {
+        if (globalDefaultState != null) {
             showDefault(globalDefaultState)
         }
     }
@@ -147,32 +151,39 @@ class LoadService : ILoadService {
         if (!mStates.containsKey(clState)) {
             throw IllegalArgumentException("未实例化${clState.simpleName}")
         }
-
         //核心
         val state = mStates[clState]
-        val view = state!!.getView(this, state)
-        onStateChangedListener?.invoke(view, state)
-        if (state is SuccessState) {
-            //成功->移除状态view
-            container.removeView(currentOtherStateView)
-            Log.d("tag", container.childCount.toString())
+        val childView = state!!.getView(this, state)
+        //线程切换
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            show(state, childView)
         } else {
-            //相同，不变
-            if (currentOtherStateView == view) {
-                return
+            Handler(Looper.getMainLooper()).post {
+                show(state, childView)
             }
-            //不同，移除状态view
-            container.removeView(currentOtherStateView)
-            view.layoutParams = if (needSpecialHandle) {
+        }
+    }
+
+    private fun show(state: BaseState, childView: View) {
+        parentView.removeAllViews()
+        onStateChangedListener?.invoke(childView, state)
+        //相同，不变
+        if (currentOtherStateView == childView) {
+            return
+        }
+        if (state !is SuccessState) {
+            childView.layoutParams = if (needSpecialHandle) {
                 targetParams
             } else {
                 ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             }
-            //增加新的状态view
-            //todo 性能没有直接显示高
-            container.addView(view)
-            currentOtherStateView = view
         }
 
+        //增加新的状态view
+        //todo 性能没有直接显示高
+        parentView.addView(childView)
+        state.attachView(mContext, childView)
+        currentOtherStateView = childView
+        Log.d("tag", parentView.childCount.toString())
     }
 }

@@ -31,7 +31,7 @@ abstract class BaseState : Serializable {
     }
 
 
-    fun initView(context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) {
+    internal fun initView(context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) {
         this.context = context
         this.onReloadListener = onReloadListener
     }
@@ -39,7 +39,7 @@ abstract class BaseState : Serializable {
     /**
      * 初始化view
      */
-    fun getView(loadService: ILoadService, currentState: BaseState): View {
+    internal fun getView(loadService: ILoadService, currentState: BaseState): View {
         //原始view因为直接返回，所以没有监听
         if (view != null) {
             return view!!
@@ -50,7 +50,6 @@ abstract class BaseState : Serializable {
         }
         view?.setOnClickListener {
             if (canReloadable()) {
-                Log.d("点击", (onReloadListener == null).toString())
                 onReloadListener?.invoke(loadService, currentState, it)
             }
         }
@@ -71,17 +70,11 @@ abstract class BaseState : Serializable {
         return false
     }
 
-    /**
-     * 设置重新加载监听
-     */
-    fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) {
-        this.onReloadListener = onReloadListener
-    }
 
     /**
      * 绑定view
      */
-    open fun attachView() {
+    open fun attachView(context: Context, view: View) {
 
     }
 
