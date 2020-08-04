@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.RelativeLayout
-import androidx.fragment.app.Fragment
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.BaseState
 import com.xu.easyload.state.SuccessState
@@ -25,9 +23,6 @@ class LoadService : ILoadService {
         initActivityTarget(target, builder)
     }
 
-    constructor(target: Fragment, builder: EasyLoad.Builder) {
-        initFragmentTarget(target, builder)
-    }
 
     private lateinit var parentView: ViewGroup
 
@@ -65,33 +60,45 @@ class LoadService : ILoadService {
         initStates(builder, originalView, target)
     }
 
-    private fun initFragmentTarget(target: Fragment, builder: EasyLoad.Builder) {
-
-    }
 
     private fun initViewTarget(target: View, builder: EasyLoad.Builder) {
 
-        val parentViewGroup = target.parent as ViewGroup
-        val mContext = target.context
-        if (parentViewGroup.javaClass == Class.forName("androidx.constraintlayout.widget.ConstraintLayout") || parentViewGroup.javaClass == RelativeLayout::class.java) {
-            //constraintLayout和RelativeLayout特殊处理
-            needSpecialHandle = true
-            targetParams = target.layoutParams
-            parentView = parentViewGroup
+        var childIndex = 0
+        //最顶级的容器，为null，说明是Fragment，那么将FrameLayout作为view给到Fragment
+        //不为null，在contentParent和childView之间加一层FrameLayout
+        val contentParent = if (target.parent == null) {
+            null
         } else {
-            val index = parentViewGroup.indexOfChild(target)
-            parentView = FrameLayout(target.context)
-            parentView.layoutParams = target.layoutParams
-            parentViewGroup.removeView(target)
-            parentViewGroup.addView(parentView, index)
-            val childParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            parentView.addView(target, childParams)
+            target.parent as ViewGroup
         }
-        initStates(builder, target, mContext)
+        contentParent?.removeView(target)
+        val oldLayoutParams = target.layoutParams
+        parentView = FrameLayout(target.context)
+        parentView.layoutParams = oldLayoutParams
+        contentParent?.addView(parentView, contentParent.indexOfChild(target), oldLayoutParams)
+//        if (parentViewGroup.javaClass == Class.forName("androidx.constraintlayout.widget.ConstraintLayout") || parentViewGroup.javaClass == RelativeLayout::class.java) {
+//            //constraintLayout和RelativeLayout特殊处理
+//            needSpecialHandle = true
+//            targetParams = target.layoutParams
+//            parentView = parentViewGroup
+//        } else {
+//            val index = parentViewGroup.indexOfChild(target)
+//            parentView = FrameLayout(target.context)
+//            parentView.layoutParams = target.layoutParams
+//            parentViewGroup.removeView(target)
+//            parentViewGroup.addView(parentView, index)
+//            val childParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+//            parentView.addView(target, childParams)
+//        }
+        initStates(builder, target, target.context)
     }
 
 
-    private fun initStates(builder: EasyLoad.Builder, originalView: View, mContext: Context) {
+    override fun getParentView(): View {
+        return parentView
+    }
+
+    private fun initStates(builder: EasyLoad.Builder, targetView: View, mContext: Context) {
         this.mContext = mContext
         val globalStates = builder.globalStates
         val localStates = builder.localStates
@@ -113,7 +120,7 @@ class LoadService : ILoadService {
             mStates[it.javaClass] = it
         }
         //成功state
-        val successState = SuccessState(originalView, mContext, reloadListener)
+        val successState = SuccessState(targetView, mContext, reloadListener)
         mStates[successState.javaClass] = successState
         //只要是localDefaultState不为空，那么local生效
         if (localDefaultState != null) {

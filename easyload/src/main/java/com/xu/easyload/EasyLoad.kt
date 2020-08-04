@@ -71,13 +71,6 @@ class EasyLoad private constructor() {
         return LoadService(target, resetLocalState())
     }
 
-    /**
-     * 注入Fragment
-     * @param target 目标Fragment
-     */
-    fun inject(target: Fragment): ILoadService {
-        return LoadService(target, resetLocalState())
-    }
 
     private fun resetLocalState(): Builder {
         val cloneBuilder = builder.copy()
@@ -135,20 +128,6 @@ class EasyLoad private constructor() {
             return instance.inject(target)
         }
 
-        /**
-         * 注入 Fragment
-         */
-        inline fun inject(target: Fragment, func: LocalBuilder.() -> Unit): ILoadService = run {
-            this.func()
-            inject(target)
-        }
-
-        /**
-         * 注入 Fragment
-         */
-        fun inject(target: Fragment): ILoadService {
-            return instance.inject(target)
-        }
 
         /**
          * 注入 View

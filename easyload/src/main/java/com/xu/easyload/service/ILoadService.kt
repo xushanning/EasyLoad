@@ -1,5 +1,6 @@
 package com.xu.easyload.service
 
+import android.view.View
 import com.xu.easyload.state.BaseState
 
 
@@ -14,5 +15,8 @@ interface ILoadService {
      */
     fun showState(clState: Class<out BaseState>)
 
-
+    /**
+     * 获取父布局
+     */
+    fun getParentView(): View
 }
