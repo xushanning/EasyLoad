@@ -1,8 +1,9 @@
-package com.example.easyload
+package com.example.easyload.ui
 
 import android.content.Intent
 import android.util.Log
-import com.example.easyload.ui.NormalActivity
+import com.example.easyload.BaseActivity
+import com.example.easyload.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {

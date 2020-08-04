@@ -105,6 +105,7 @@ class LoadService : ILoadService {
         val reloadListener = builder.onReloadListener
         val localDefaultState = builder.localDefaultState
         val globalDefaultState = builder.globalDefaultState
+        val showDefault=builder.showDefault
         this.onStateChangedListener = builder.onStateChangeListener
         if (globalStates.isEmpty() && localStates.isEmpty()) {
             throw IllegalArgumentException("globalState和localState必须设置其一~！")

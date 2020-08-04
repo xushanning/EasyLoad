@@ -78,6 +78,7 @@ class EasyLoad private constructor() {
         builder.onReloadListener = null
         builder.onStateChangeListener = null
         builder.localStates.clear()
+        builder.showDefault = true
         return cloneBuilder
     }
 
@@ -89,28 +90,37 @@ class EasyLoad private constructor() {
          *添加局部的state
          */
         fun addLocalState(state: BaseState) = apply {
-            builder.addLocalState(state)
+            if (!builder.localStates.contains(state)) {
+                builder.localStates.add(state)
+            }
         }
 
         /**
          * 添加全局的默认的state
          */
         fun setLocalDefaultState(localDefault: Class<out BaseState>) = apply {
-            builder.setLocalDefaultState(localDefault)
+            builder.localDefaultState = localDefault
         }
 
         /**
          * 设置重新加载监听
          */
         fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) = apply {
-            builder.setOnReloadListener(onReloadListener)
+            builder.onReloadListener = onReloadListener
         }
 
         /**
          * 设置重新加载监听
          */
         fun setOnStateChangeListener(onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)) = apply {
-            builder.setOnStateChangeListener(onStateChangeListener)
+            builder.onStateChangeListener = onStateChangeListener
+        }
+
+        /**
+         * 是否展示默认state
+         */
+        fun showDefault(showDefault: Boolean = true) =apply{
+            builder.showDefault = showDefault
         }
 
         /**
@@ -153,14 +163,16 @@ class EasyLoad private constructor() {
          * 添加局部状态
          */
         fun addGlobalState(state: BaseState) = apply {
-            builder.addGlobalState(state)
+            if (!builder.globalStates.contains(state)) {
+                builder.globalStates.add(state)
+            }
         }
 
         /**
          * 添加局部默认
          */
         fun setGlobalDefaultState(defaultState: Class<out BaseState>) = apply {
-            builder.setGlobalDefaultState(defaultState)
+            builder.globalDefaultState = defaultState
         }
 
     }
@@ -170,7 +182,6 @@ class EasyLoad private constructor() {
          * 全局的status
          */
         internal val globalStates: MutableList<BaseState> = ArrayList()
-
 
         /**
          * 局部status
@@ -198,54 +209,12 @@ class EasyLoad private constructor() {
          */
         internal var onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)? = null
 
-        /**
-         * 添加全局的state
-         */
-        internal fun addGlobalState(state: BaseState) = apply {
-            if (!globalStates.contains(state)) {
-                globalStates.add(state)
-            }
-        }
 
         /**
-         * 设置默认的status
-         * 后设置会把前面设置的覆盖掉
+         * 默认展示默认的state
          */
-        internal fun setGlobalDefaultState(defaultStatus: Class<out BaseState>) = apply {
-            this.globalDefaultState = defaultStatus
-        }
+        var showDefault = true
 
-
-        /**
-         *添加局部的state
-         */
-        internal fun addLocalState(state: BaseState) = apply {
-            if (!localStates.contains(state)) {
-                localStates.add(state)
-            }
-        }
-
-        /**
-         * 添加全局的默认的state
-         */
-        internal fun setLocalDefaultState(localDefault: Class<out BaseState>) = apply {
-            this.localDefaultState = localDefault
-        }
-
-        /**
-         * 设置重新加载监听
-         */
-        internal fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) = apply {
-            this.onReloadListener = onReloadListener
-        }
-
-
-        /**
-         * 设置重新加载监听
-         */
-        internal fun setOnStateChangeListener(onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)) = apply {
-            this.onStateChangeListener = onStateChangeListener
-        }
 
         /**
          * 复制对象

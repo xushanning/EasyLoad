@@ -27,6 +27,8 @@ class NormalActivity : BaseActivity() {
     override fun initView() {
 
         val service = EasyLoad.initLocal()
+                .addLocalState(PlaceHolderState())
+                .showDefault(false)
                 .setLocalDefaultState(PlaceHolderState::class.java)
                 .inject(this) {
                     setOnReloadListener { iLoadService, clickState, view ->

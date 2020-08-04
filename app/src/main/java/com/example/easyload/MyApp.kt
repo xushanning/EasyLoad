@@ -3,7 +3,7 @@ package com.example.easyload
 import android.app.Application
 import com.example.easyload.states.EmptyState
 import com.example.easyload.states.ErrorState
-import com.example.easyload.states.PlaceHolderState
+import com.example.easyload.states.LoadingState
 import com.xu.easyload.EasyLoad
 
 /**
@@ -17,8 +17,8 @@ class MyApp : Application() {
         EasyLoad.initGlobal()
                 .addGlobalState(ErrorState())
                 .addGlobalState(EmptyState())
-                .addGlobalState(PlaceHolderState())
-                .setGlobalDefaultState(PlaceHolderState::class.java)
+                .addGlobalState(LoadingState())
+                .setGlobalDefaultState(LoadingState::class.java)
     }
 
 
