@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,7 +26,7 @@
             android:layout_height="100dp"
             android:layout_margin="20dp"
             android:background="#eaeaea"
-            android:gravity="bottom"
+            android:gravity="center"
             android:text="这是一个很长的textview"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

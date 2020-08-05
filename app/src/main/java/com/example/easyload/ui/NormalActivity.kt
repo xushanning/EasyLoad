@@ -9,6 +9,7 @@ import com.example.easyload.states.ErrorState
 import com.example.easyload.states.PlaceHolderState
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.SuccessState
+import kotlinx.android.synthetic.main.activity_normal.*
 
 /**
  * @author 言吾許

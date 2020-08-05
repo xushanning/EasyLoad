@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.contains
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.BaseState
@@ -84,7 +83,7 @@ class LoadService : ILoadService {
             target.parent as ViewGroup
         }
         //ConstraintLayout and RelativeLayout Need special handle
-        needSpecialHandle = contentParent != null && (contentParent.javaClass == Class.forName("androidx.constraintlayout.widget.ConstraintLayout") || contentParent.javaClass == RelativeLayout::class.java)
+        needSpecialHandle = contentParent != null && (contentParent.javaClass == ConstraintLayout::class || contentParent.javaClass == RelativeLayout::class)
         if (needSpecialHandle) {
             specialHandle(target, builder)
             return
@@ -92,7 +91,8 @@ class LoadService : ILoadService {
         contentParent?.removeView(target)
         val oldLayoutParams = target.layoutParams
         parentView = FrameLayout(target.context)
-        parentView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        target.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        parentView.addView(target)
         contentParent?.addView(parentView, contentParent.indexOfChild(target), oldLayoutParams)
         initStates(builder, target, target.context)
     }
@@ -192,13 +192,15 @@ class LoadService : ILoadService {
             return
         }
         currentState?.detachView()
-        parentView.removeAllViews()
+        parentView.removeView(currentStateView)
         onStateChangedListener?.invoke(childView, state)
-        val layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        parentView.addView(childView, layoutParams)
-        state.attachView(mContext, childView)
         currentStateView = childView
         currentState = state
+        if (state !is SuccessState) {
+            val layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            parentView.addView(childView, layoutParams)
+            state.attachView(mContext, childView)
+        }
     }
 
     /**
@@ -222,5 +224,18 @@ class LoadService : ILoadService {
             parentView.addView(childView)
             state.attachView(mContext, childView)
         }
+
+//        val view = state.getView(this, state)
+//        if (state is SuccessState) {
+//            parentView.removeView(currentStateView)
+//        } else {
+//            if (currentStateView == view) {
+//                return
+//            }
+//            parentView.removeView(currentStateView)
+//            view.layoutParams = specialHandleParams
+//            parentView.addView(view)
+//            currentStateView = view
+//        }
     }
 }
