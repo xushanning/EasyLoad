@@ -1,12 +1,12 @@
 package com.example.easyload.ui
 
+import android.os.Handler
 import android.os.SystemClock
 import com.example.easyload.BaseActivity
 import com.example.easyload.DelayUtil
 import com.example.easyload.R
 import com.example.easyload.states.ErrorState
 import com.example.easyload.states.LoadingState
-import com.example.easyload.states.PlaceHolderState
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.SuccessState
 import kotlinx.android.synthetic.main.activity_view.*
@@ -20,14 +20,23 @@ class ViewActivity : BaseActivity() {
     }
 
     override fun initView() {
-        val service = EasyLoad.initLocal()
+        val imgService = EasyLoad.initLocal()
                 .inject(img_view) {
                     setOnReloadListener { iLoadService, clickState, view ->
                         iLoadService.showState(LoadingState::class.java)
-                        SystemClock.sleep(500)
-                        iLoadService.showState(SuccessState::class.java)
+                        Handler().postDelayed({
+                            iLoadService.showState(SuccessState::class.java)
+                        }, 3000)
                     }
                 }
-        DelayUtil.delay(service, SuccessState::class.java, 3000)
+        DelayUtil.delay(imgService, ErrorState::class.java, 2500)
+
+        val tvService = EasyLoad.initLocal()
+                .inject(tv_long)
+        DelayUtil.delay(tvService, SuccessState::class.java, 1000)
+
+        val tvService2 = EasyLoad.initLocal()
+                .inject(tv_long2)
+        DelayUtil.delay(tvService2, SuccessState::class.java, 1000)
     }
 }

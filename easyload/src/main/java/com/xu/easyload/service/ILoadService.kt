@@ -17,6 +17,7 @@ interface ILoadService {
 
     /**
      * 获取父布局
+     * 一般在Fragment中会用到这个方法
      */
     fun getParentView(): View
 }

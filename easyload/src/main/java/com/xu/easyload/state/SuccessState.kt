@@ -7,7 +7,12 @@ import com.xu.easyload.service.ILoadService
 /**
  * 成功
  */
-class SuccessState constructor(view: View, context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) : BaseState(view, context, onReloadListener) {
+class SuccessState : BaseState {
+
+    constructor(view: View, context: Context) : super(view, context, null)
+
+    constructor(context: Context) : super(context)
+
     /**
      * 设置布局
      */

@@ -14,8 +14,8 @@ class LoadingState : BaseState() {
         return R.layout.view_easy_load_loading
     }
 
-    override fun attachView(context: Context, view: View) {
-        val chrome = view.findViewById<LVChromeLogo>(R.id.lv_chromeLogo)
-        chrome.startAnim()
+    override fun attachView(context: Context, view: View ) {
+        val chrome = view .findViewById<LVChromeLogo>(R.id.lv_chromeLogo)
+        chrome?.startAnim()
     }
 }

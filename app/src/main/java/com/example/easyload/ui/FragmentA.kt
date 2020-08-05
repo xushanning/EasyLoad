@@ -1,7 +1,8 @@
 package com.example.easyload.ui
 
 import android.os.Bundle
-import android.os.SystemClock
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,14 +22,16 @@ class FragmentA : Fragment() {
     lateinit var service: ILoadService
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_a, container, false)
-        service = EasyLoad.initLocal().inject(view) {
-            setOnReloadListener { iLoadService, clickState, view ->
-                //todo 这里有bug
-                iLoadService.showState(PlaceHolderState::class.java)
-                SystemClock.sleep(3000)
-                iLoadService.showState(SuccessState::class.java)
-            }
-        }
+        service = EasyLoad.initLocal()
+                .addLocalState(PlaceHolderState())
+                .inject(view) {
+                    setOnReloadListener { iLoadService, clickState, view ->
+                        iLoadService.showState(PlaceHolderState::class.java)
+                        Handler().postDelayed({
+                            iLoadService.showState(SuccessState::class.java)
+                        }, 3000)
+                    }
+                }
         return service.getParentView()
     }
 

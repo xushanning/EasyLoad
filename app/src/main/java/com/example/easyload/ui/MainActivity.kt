@@ -16,12 +16,15 @@ class MainActivity : BaseActivity() {
 
         //注入activity
         bt_inject_activity.setOnClickListener {
-            Log.d("main", "跳转")
             startActivity(Intent(this, NormalActivity::class.java))
         }
-        //保留appbar
-        bt_keep_bar.setOnClickListener {
-
+        //注入Fragment
+        bt_inject_fragment.setOnClickListener {
+            startActivity(Intent(this, FragmentActivity::class.java))
+        }
+        //注入view
+        bt_inject_view.setOnClickListener {
+            startActivity(Intent(this, ViewActivity::class.java))
         }
     }
 }

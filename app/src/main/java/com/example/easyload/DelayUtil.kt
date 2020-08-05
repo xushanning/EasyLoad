@@ -12,7 +12,7 @@ object DelayUtil {
         this.delay(loadService, SuccessState::class.java, delay)
     }
 
-    fun delay(loadService: ILoadService, clState: Class<out BaseState>, delay: Long = 2000) {
+    fun delay(loadService: ILoadService, clState: Class<out BaseState>, delay: Long = 3000) {
         Handler(Looper.getMainLooper()).postDelayed(
                 { loadService.showState(clState) }, delay)
     }

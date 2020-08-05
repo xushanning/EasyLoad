@@ -10,6 +10,8 @@ import io.supercharge.shimmerlayout.ShimmerLayout
  * @author 言吾許
  */
 class PlaceHolderState : BaseState() {
+    private var shimmer: ShimmerLayout? = null
+
     /**
      * 设置布局
      */
@@ -18,7 +20,11 @@ class PlaceHolderState : BaseState() {
     }
 
     override fun attachView(context: Context, view: View) {
-        val shimmer = view.findViewById<ShimmerLayout>(R.id.shimmer_layout)
-        shimmer.startShimmerAnimation()
+        shimmer = view.findViewById(R.id.shimmer_layout)
+        shimmer?.startShimmerAnimation()
+    }
+
+    override fun detachView() {
+        shimmer?.stopShimmerAnimation()
     }
 }

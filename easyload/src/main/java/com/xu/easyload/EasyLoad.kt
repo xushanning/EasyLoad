@@ -105,21 +105,21 @@ class EasyLoad private constructor() {
         /**
          * 设置重新加载监听
          */
-        fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)) = apply {
+        fun setOnReloadListener(onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View?) -> Unit)) = apply {
             builder.onReloadListener = onReloadListener
         }
 
         /**
          * 设置重新加载监听
          */
-        fun setOnStateChangeListener(onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)) = apply {
+        fun setOnStateChangeListener(onStateChangeListener: ((view: View?, currentState: BaseState) -> Unit)) = apply {
             builder.onStateChangeListener = onStateChangeListener
         }
 
         /**
          * 是否展示默认state
          */
-        fun showDefault(showDefault: Boolean = true) =apply{
+        fun showDefault(showDefault: Boolean = true) = apply {
             builder.showDefault = showDefault
         }
 
@@ -207,7 +207,7 @@ class EasyLoad private constructor() {
         /**
          * 状态改变监听
          */
-        internal var onStateChangeListener: ((view: View, currentState: BaseState) -> Unit)? = null
+        internal var onStateChangeListener: ((view: View?, currentState: BaseState) -> Unit)? = null
 
 
         /**

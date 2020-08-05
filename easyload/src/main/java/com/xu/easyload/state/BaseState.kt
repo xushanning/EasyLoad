@@ -30,6 +30,9 @@ abstract class BaseState : Serializable {
         this.onReloadListener = onReloadListener
     }
 
+    constructor(context: Context) {
+        this.context = context
+    }
 
     internal fun initView(context: Context, onReloadListener: ((iLoadService: ILoadService, clickState: BaseState, view: View) -> Unit)? = null) {
         this.context = context
@@ -72,7 +75,7 @@ abstract class BaseState : Serializable {
 
 
     /**
-     * 绑定view
+     * 绑定view或者移动view到前面
      */
     open fun attachView(context: Context, view: View) {
 
@@ -80,6 +83,7 @@ abstract class BaseState : Serializable {
 
     /**
      * 解绑view
+     * 在remove view的时候调用
      */
     open fun detachView() {
 

@@ -9,7 +9,6 @@ import com.example.easyload.states.ErrorState
 import com.example.easyload.states.PlaceHolderState
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.SuccessState
-import java.util.logging.Logger
 
 /**
  * @author 言吾許
@@ -17,7 +16,7 @@ import java.util.logging.Logger
 class NormalActivity : BaseActivity() {
 
     companion object {
-        private val tag = "normal"
+        private val tag = "_" + NormalActivity::class.java.simpleName
     }
 
     override fun setLayout(): Int {
@@ -28,14 +27,14 @@ class NormalActivity : BaseActivity() {
 
         val service = EasyLoad.initLocal()
                 .addLocalState(PlaceHolderState())
-                .showDefault(false)
+                .showDefault(true)
                 .setLocalDefaultState(PlaceHolderState::class.java)
                 .inject(this) {
                     setOnReloadListener { iLoadService, clickState, view ->
                         //可以在子线程中使用
                         Thread(Runnable {
                             iLoadService.showState(PlaceHolderState::class.java)
-                            SystemClock.sleep(500)
+                            SystemClock.sleep(4000)
                             iLoadService.showState(SuccessState::class.java)
                         }).start()
                     }
@@ -50,6 +49,6 @@ class NormalActivity : BaseActivity() {
                         }
                     }
                 }
-        DelayUtil.delay(service, ErrorState::class.java, 3000)
+        DelayUtil.delay(service, ErrorState::class.java)
     }
 }
