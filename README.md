@@ -11,6 +11,8 @@ EasyLoad
 * :star:支持错误页面点击重新加载监听
 * :star:支持状态改变监听
 
+
+ConstraintLayout布局由于存在有一定缺陷
 ##使用EasyLoad
 ####一、全局配置
 只支持一次对全局配置的初始化，多次配置会报错。

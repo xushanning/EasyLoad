@@ -4,33 +4,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/img_view"
-            android:layout_width="0dp"
-            android:layout_height="500dp"
-            android:layout_margin="20dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_long"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:background="#eaeaea"
-            android:gravity="center"
-            android:text="这是一个很长的textview"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_view" />
+            <ImageView
+                android:id="@+id/img_view"
+                android:layout_width="0dp"
+                android:layout_height="500dp"
+                android:layout_margin="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_child"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_margin="20dp"
+                android:background="#eaeaea"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_view">
+
+                <TextView
+                    android:id="@+id/tv_long"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/avatar_background"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="Android"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="点击加入俱乐部"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/tv_long"
+                    app:layout_constraintTop_toTopOf="@+id/tv_long" />
+
+                <TextView
+                    android:id="@+id/tv_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="点击查看我的消费记录"
+                    app:layout_constraintStart_toEndOf="@+id/tv_long"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_2" />
+
+                <Button
+                    android:id="@+id/bt_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="按钮1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_long" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/v_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="20dp"
+                android:background="#eaeaea"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cl_child" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -48,8 +113,34 @@
                 android:background="#eaeaea"
                 android:gravity="center"
                 android:text="这是一个很长的textview2222" />
+
+            <ImageView
+                android:id="@+id/img_relative"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_below="@+id/tv_long2"
+                android:layout_margin="20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_relative"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/img_relative"
+                android:background="#ffffff">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="相对布局中的ConstraintLayout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.core.widget.NestedScrollView>

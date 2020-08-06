@@ -13,6 +13,6 @@ abstract class BaseActivity : AppCompatActivity() {
         initView()
     }
 
-    abstract fun setLayout():Int
+    abstract fun setLayout(): Int
     abstract fun initView()
 }

@@ -83,7 +83,7 @@ class LoadService : ILoadService {
             target.parent as ViewGroup
         }
         //ConstraintLayout and RelativeLayout Need special handle
-        needSpecialHandle = contentParent != null && (contentParent.javaClass == ConstraintLayout::class || contentParent.javaClass == RelativeLayout::class)
+        needSpecialHandle = contentParent != null && (contentParent.javaClass == ConstraintLayout::class.java || contentParent.javaClass == RelativeLayout::class.java)
         if (needSpecialHandle) {
             specialHandle(target, builder)
             return
@@ -212,30 +212,40 @@ class LoadService : ILoadService {
         if (currentStateView == childView) {
             return
         }
+
+
+        //========================
+        if (state is SuccessState) {
+            currentStateView?.visibility = View.INVISIBLE
+        } else {
+            if (parentView.indexOfChild(childView) != -1) {
+                childView.visibility = View.VISIBLE
+            } else {
+                parentView.addView(childView, -1, specialHandleParams)
+            }
+        }
         onStateChangedListener?.invoke(childView, state)
+
+
+        //===================
+
+//        currentState?.detachView()
+//        onStateChangedListener?.invoke(childView, state)
+//
+//        parentView as ConstraintLayout
+//        if (parentView.indexOfChild(childView) != -1) {
+//            parentView.bringChildToFront(childView)
+//            return
+//        }
+//        if (state !is SuccessState) {
+//            parentView.addView(childView, -1, specialHandleParams)
+//            state.attachView(mContext, childView)
+//
+//        }
+
+
+        //===================
         currentStateView = childView
         currentState = state
-        if (parentView.indexOfChild(childView) != -1) {
-            parentView.bringChildToFront(childView)
-            return
-        }
-        if (state !is SuccessState) {
-            childView.layoutParams = specialHandleParams
-            parentView.addView(childView)
-            state.attachView(mContext, childView)
-        }
-
-//        val view = state.getView(this, state)
-//        if (state is SuccessState) {
-//            parentView.removeView(currentStateView)
-//        } else {
-//            if (currentStateView == view) {
-//                return
-//            }
-//            parentView.removeView(currentStateView)
-//            view.layoutParams = specialHandleParams
-//            parentView.addView(view)
-//            currentStateView = view
-//        }
     }
 }
