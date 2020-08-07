@@ -79,6 +79,8 @@ class EasyLoad private constructor() {
         builder.onStateChangeListener = null
         builder.localStates.clear()
         builder.showDefault = true
+        builder.delay = 100
+        builder.specialSupport = false
         return cloneBuilder
     }
 
@@ -121,6 +123,15 @@ class EasyLoad private constructor() {
          */
         fun showDefault(showDefault: Boolean = true) = apply {
             builder.showDefault = showDefault
+        }
+
+        /**
+         * 约束布局中有时候会出现bug，如若出现问题，开启此项
+         * 只对约束布局起作用
+         */
+        fun specialSupport(support: Boolean, delay: Long = 100L) = apply {
+            builder.delay = delay
+            builder.specialSupport = support
         }
 
         /**
@@ -213,8 +224,17 @@ class EasyLoad private constructor() {
         /**
          * 默认展示默认的state
          */
-        var showDefault = true
+        internal var showDefault = true
 
+        /**
+         * 特殊布局支持
+         */
+        internal var specialSupport = false
+
+        /**
+         * 特殊布局加载延迟时间
+         */
+        internal var delay = 100L
 
         /**
          * 复制对象

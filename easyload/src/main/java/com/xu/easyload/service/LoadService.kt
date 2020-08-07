@@ -66,6 +66,17 @@ class LoadService : ILoadService {
      */
     private lateinit var specialHandleParams: ViewGroup.LayoutParams
 
+    /**
+     * 是否特殊支持
+     */
+    private var specialSupport = false
+
+    /**
+     * 延迟
+     * 只有在 specialSupport=true的情况下生效
+     */
+    private var delay = 100L
+
 
     private fun initActivityTarget(target: Activity, builder: EasyLoad.Builder) {
         parentView = target.findViewById(android.R.id.content)
@@ -88,6 +99,7 @@ class LoadService : ILoadService {
             specialHandle(target, builder)
             return
         }
+        println(contentParent)
         contentParent?.removeView(target)
         val oldLayoutParams = target.layoutParams
         parentView = FrameLayout(target.context)
@@ -104,7 +116,6 @@ class LoadService : ILoadService {
         needSpecialHandle = true
         parentView = target.parent as ViewGroup
         specialHandleParams = target.layoutParams
-
         initStates(builder, target, target.context)
     }
 
@@ -125,6 +136,8 @@ class LoadService : ILoadService {
         val globalDefaultState = builder.globalDefaultState
         val showDefault = builder.showDefault
         this.onStateChangedListener = builder.onStateChangeListener
+        this.specialSupport = builder.specialSupport
+        this.delay = builder.delay
         if (globalStates.isEmpty() && localStates.isEmpty()) {
             throw IllegalArgumentException("globalState和localState必须设置其一~！")
         }
@@ -177,7 +190,13 @@ class LoadService : ILoadService {
 
     private fun show(state: BaseState) {
         if (needSpecialHandle) {
-            showSpecial(state)
+            if ((parentView is ConstraintLayout) && specialSupport) {
+                Handler().postDelayed({
+                    showSpecial(state)
+                }, delay)
+            } else {
+                showSpecial(state)
+            }
         } else {
             showOrdinary(state)
         }
@@ -215,16 +234,19 @@ class LoadService : ILoadService {
 
 
         //========================
+        onStateChangedListener?.invoke(childView, state)
+        currentStateView?.visibility = View.INVISIBLE
         if (state is SuccessState) {
-            currentStateView?.visibility = View.INVISIBLE
+            currentState?.detachView()
+            childView.visibility = View.VISIBLE
         } else {
             if (parentView.indexOfChild(childView) != -1) {
                 childView.visibility = View.VISIBLE
             } else {
                 parentView.addView(childView, -1, specialHandleParams)
+                state.attachView(mContext, childView)
             }
         }
-        onStateChangedListener?.invoke(childView, state)
 
 
         //===================
