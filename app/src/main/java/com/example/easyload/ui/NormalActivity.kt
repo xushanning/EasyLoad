@@ -30,7 +30,12 @@ class NormalActivity : BaseActivity() {
                 .addLocalState(PlaceHolderState())
                 .showDefault(true)
                 .setLocalDefaultState(PlaceHolderState::class.java)
+                //设置重新加载监听方式①
+//                .setOnReloadListener { iLoadService, clickState, view ->
+//                    //do something
+//                }
                 .inject(this) {
+                    //设置重新加载监听方式②
                     setOnReloadListener { iLoadService, clickState, view ->
                         when (clickState) {
                             is PlaceHolderState ->
@@ -48,6 +53,7 @@ class NormalActivity : BaseActivity() {
                             iLoadService.showState(SuccessState::class.java)
                         }).start()
                     }
+                    //设置状态变更监听
                     setOnStateChangeListener { view, currentState ->
                         when (currentState) {
                             is PlaceHolderState ->
