@@ -12,7 +12,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/img_view"
@@ -29,7 +29,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_child"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:layout_margin="20dp"
                 android:background="#eaeaea"
                 app:layout_constraintEnd_toEndOf="parent"

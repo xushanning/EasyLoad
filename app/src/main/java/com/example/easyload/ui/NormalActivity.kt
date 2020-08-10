@@ -32,6 +32,15 @@ class NormalActivity : BaseActivity() {
                 .setLocalDefaultState(PlaceHolderState::class.java)
                 .inject(this) {
                     setOnReloadListener { iLoadService, clickState, view ->
+                        when (clickState) {
+                            is PlaceHolderState ->
+                                Log.d(tag, "点击的是PlaceHolderState")
+                            is ErrorState ->
+                                Log.d(tag, "点击的是ErrorState")
+                            is SuccessState ->
+                                Log.d(tag, "点击的是SuccessState")
+                        }
+
                         //可以在子线程中使用
                         Thread(Runnable {
                             iLoadService.showState(PlaceHolderState::class.java)

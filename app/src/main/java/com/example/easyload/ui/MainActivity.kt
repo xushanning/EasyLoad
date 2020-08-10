@@ -14,17 +14,26 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
 
-        //注入activity
+        //inject activity
         bt_inject_activity.setOnClickListener {
             startActivity(Intent(this, NormalActivity::class.java))
         }
-        //注入Fragment
+        //inject Fragment
         bt_inject_fragment.setOnClickListener {
             startActivity(Intent(this, FragmentActivity::class.java))
         }
-        //注入view
+        //inject view
         bt_inject_view.setOnClickListener {
             startActivity(Intent(this, ViewActivity::class.java))
         }
+        //SmartRefresh
+        bt_inject_smart_refresh.setOnClickListener {
+            startActivity(Intent(this, SmartRefreshActivity::class.java))
+        }
+        //RecyclerView
+        bt_recycler_view.setOnClickListener {
+            startActivity(Intent(this, RecyclerViewActivity::class.java))
+        }
+
     }
 }

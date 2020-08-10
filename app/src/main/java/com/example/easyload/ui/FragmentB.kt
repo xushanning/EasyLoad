@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.easyload.DelayUtil
 import com.example.easyload.R
-import com.example.easyload.states.ErrorState
-import com.example.easyload.states.LoadingState
-import com.example.easyload.states.NoInternetState
-import com.example.easyload.states.PlaceHolderState
+import com.example.easyload.states.*
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.service.ILoadService
 import com.xu.easyload.state.SuccessState
@@ -24,6 +21,8 @@ class FragmentB : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_b, container, false)
         service = EasyLoad.initLocal()
+                .addLocalState(LoadingState2())
+                .setLocalDefaultState(LoadingState2::class.java)
                 .inject(view) {
                     setOnReloadListener { iLoadService, clickState, view ->
                         iLoadService.showState(LoadingState::class.java)

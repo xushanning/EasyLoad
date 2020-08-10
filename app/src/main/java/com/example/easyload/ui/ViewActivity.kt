@@ -56,7 +56,8 @@ class ViewActivity : BaseActivity() {
         val sLayer = EasyLoad.initLocal()
                 .addLocalState(LoadingState2())
                 .setLocalDefaultState(LoadingState2::class.java)
-                .specialSupport(true)
+                //ConstraintLayout 2.0版本以上会如果ConstraintLayout里面再嵌套ConstraintLayout，会出现不显示的问题，可以通过设置specialSupport为true来支持
+//                .specialSupport(true)
                 .inject(cl_child)
         DelayUtil.delay(sLayer, SuccessState::class.java, 2000)
 

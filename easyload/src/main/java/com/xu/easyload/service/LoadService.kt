@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.contains
 import com.xu.easyload.EasyLoad
 import com.xu.easyload.state.BaseState
 import com.xu.easyload.state.SuccessState
@@ -94,12 +92,12 @@ class LoadService : ILoadService {
             target.parent as ViewGroup
         }
         //ConstraintLayout and RelativeLayout Need special handle
-        needSpecialHandle = contentParent != null && (contentParent.javaClass == ConstraintLayout::class.java || contentParent.javaClass == RelativeLayout::class.java)
+        needSpecialHandle = contentParent != null && (contentParent.javaClass == Class.forName("androidx.constraintlayout.widget.ConstraintLayout") || contentParent.javaClass == RelativeLayout::class.java)
         if (needSpecialHandle) {
             specialHandle(target, builder)
             return
         }
-        println(contentParent)
+
         contentParent?.removeView(target)
         val oldLayoutParams = target.layoutParams
         parentView = FrameLayout(target.context)
@@ -190,7 +188,7 @@ class LoadService : ILoadService {
 
     private fun show(state: BaseState) {
         if (needSpecialHandle) {
-            if ((parentView is ConstraintLayout) && specialSupport) {
+            if ((parentView.javaClass == Class.forName("androidx.constraintlayout.widget.ConstraintLayout")) && specialSupport) {
                 Handler().postDelayed({
                     showSpecial(state)
                 }, delay)
@@ -234,36 +232,32 @@ class LoadService : ILoadService {
 
 
         //========================
-        onStateChangedListener?.invoke(childView, state)
-        currentStateView?.visibility = View.INVISIBLE
-        if (state is SuccessState) {
-            currentState?.detachView()
-            childView.visibility = View.VISIBLE
-        } else {
-            if (parentView.indexOfChild(childView) != -1) {
-                childView.visibility = View.VISIBLE
-            } else {
-                parentView.addView(childView, -1, specialHandleParams)
-                state.attachView(mContext, childView)
-            }
-        }
+//        onStateChangedListener?.invoke(childView, state)
+//        currentStateView?.visibility = View.INVISIBLE
+//        if (state is SuccessState) {
+//            currentState?.detachView()
+//            childView.visibility = View.VISIBLE
+//        } else {
+//            if (parentView.indexOfChild(childView) != -1) {
+//                childView.visibility = View.VISIBLE
+//            } else {
+//                parentView.addView(childView, -1, specialHandleParams)
+//                state.attachView(mContext, childView)
+//            }
+//        }
 
 
         //===================
 
-//        currentState?.detachView()
-//        onStateChangedListener?.invoke(childView, state)
-//
-//        parentView as ConstraintLayout
-//        if (parentView.indexOfChild(childView) != -1) {
-//            parentView.bringChildToFront(childView)
-//            return
-//        }
-//        if (state !is SuccessState) {
-//            parentView.addView(childView, -1, specialHandleParams)
-//            state.attachView(mContext, childView)
-//
-//        }
+        currentState?.detachView()
+        onStateChangedListener?.invoke(childView, state)
+
+        if (parentView.indexOfChild(childView) != -1) {
+            parentView.bringChildToFront(childView)
+        } else if (state !is SuccessState) {
+            parentView.addView(childView, -1, specialHandleParams)
+            state.attachView(mContext, childView)
+        }
 
 
         //===================

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/smart_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,14 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/tv_smart_refresh"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#eaeaea"
-        android:gravity="center"
-        android:text="hello world" />
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tv_smart_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eaeaea"
+            android:gravity="center"
+            android:text="hello world" />
+    </RelativeLayout>
 
     <com.scwang.smart.refresh.footer.ClassicsFooter
         android:layout_width="match_parent"
