@@ -139,7 +139,7 @@ class EmptyState : BaseState() {
                 .addLocalState(LoadingState2())
                 .setLocalDefaultState(LoadingState2::class.java)
                 //ConstraintLayout 2.0版本以上，会出现不显示的问题，可以通过设置specialSupport为true来支持,会损失性能
-//              .specialSupport(true)
+                //.specialSupport(true)
                 .inject(cl_child)
 ```
 
