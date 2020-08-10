@@ -19,15 +19,15 @@ EasyLoad
 * :heavy_check_mark:支持`ConstraintLayout`和`SmartRefreshLayout`
 * :heavy_check_mark:完全自定义状态页面(继承`BaseState`类)
 
-##使用EasyLoad
+## 使用EasyLoad
 
 
-####添加依赖
+#### 添加依赖
 ```
 compile 'xxxxx'
 ```
 
-####一、全局配置
+#### 一、全局配置
 
 全局配置只能初始化一次，多次配置会报错。
 
@@ -43,7 +43,7 @@ class MyApp : Application() {
     }
 }
 ```
-####二、自定义状态类
+#### 二、自定义状态类
 ```kotlin
 class EmptyState : BaseState() {
     /**
@@ -61,7 +61,7 @@ class EmptyState : BaseState() {
 
 }
 ```
-####三、页面配置
+#### 三、页面配置
 注入到`Activity`中
 ```kotlin
   val service = EasyLoad.initLocal()
@@ -144,7 +144,7 @@ class EmptyState : BaseState() {
 ```
 
 
-####License
+#### License
 ****
 ```
 Copyright 2017, YanWu
