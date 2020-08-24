@@ -1,0 +1,108 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+def siteUrl = 'https://github.com/xushanning/EasyLoad'
+def gitUrl = 'https://github.com/xushanning/EasyLoad'
+def issueUrl = 'https://github.com/xushanning/EasyLoad/issues'
+
+group "com.xu.easyload"
+version = "0.0.1"
+def artifactIdName = 'easyload'
+def projectName = 'EasyLoad'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("user")
+    key = properties.getProperty("apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = projectName
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        issueTrackerUrl = issueUrl
+        userOrg = "xushanning"
+        licenses = ['MIT']
+        publish = true
+    }
+}
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                name artifactIdName
+                artifactId artifactIdName
+                description 'A library about android loading status'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://raw.githubusercontent.com/minggo620/Pluto-Android/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'yanwu'
+                        name '许'
+                        email 'shanningxu@163.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+
+if (project.getPlugins().hasPlugin('com.android.application') || project.getPlugins().hasPlugin('com.android.library')) {
+    println('--------android--------')
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+    task javadoc(type: Javadoc) {
+        failOnError false
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+
+} else {
+    println('--------java--------')
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+javadoc {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        author true
+        version true
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+
