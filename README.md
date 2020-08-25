@@ -2,11 +2,11 @@ EasyLoad
 ==
 |作者|言吾|
 |---|---
-|简书|简书
+|[Github](https://github.com/xushanning/EasyLoad "求star")|[简书](https://www.jianshu.com/u/02be819f103e)
 
 ****
 
-`EasyLoad`是一个基于Koltin、专注于AndroidX简单易用的页面状态加载框架，支持Activity、Fragment和View，
+`EasyLoad`是一个基于**Koltin**、专注于**AndroidX**简单易用的页面状态加载框架，支持Activity、Fragment和View，
 对布局文件实现零侵入。
 
 
@@ -24,7 +24,7 @@ EasyLoad
 
 #### 添加依赖
 ```
-compile 'xxxxx'
+implementation 'com.xu.easyload:easyload:0.0.1'
 ```
 
 #### 一、全局配置
@@ -53,7 +53,7 @@ class EmptyState : BaseState() {
         return R.layout.view_easy_load_empty
     }
     /**
-    *是否允许重新加载 
+    *是否允许重新加载
     */
     override fun canReloadable(): Boolean {
         return true
@@ -143,11 +143,12 @@ class EmptyState : BaseState() {
                 .inject(cl_child)
 ```
 
+**具体使用方法见Demo**，欢迎各位大佬 **Star、提问题**
 
 #### License
 ****
 ```
-Copyright 2017, YanWu
+Copyright 2020, YanWu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
