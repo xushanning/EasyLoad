@@ -6,7 +6,7 @@ def gitUrl = 'https://github.com/xushanning/EasyLoad'
 def issueUrl = 'https://github.com/xushanning/EasyLoad/issues'
 
 group "com.xu.easyload"
-version = "0.0.1"
+version = "0.0.2"
 def artifactIdName = 'easyload'
 def projectName = 'EasyLoad'
 

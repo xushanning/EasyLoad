@@ -171,6 +171,13 @@ class EasyLoad private constructor() {
      */
     class GlobalBuilder internal constructor() {
         /**
+         * 初始化
+         */
+        fun init(func: GlobalBuilder.() -> Unit) = run {
+            this.func()
+        }
+
+        /**
          * 添加局部状态
          */
         fun addGlobalState(state: BaseState) = apply {

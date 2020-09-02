@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.scwang.smart:refresh-footer-classics:2.0.1'
 
 
-    implementation 'com.xu.easyload:easyload:0.0.1'
+    implementation 'com.xu.easyload:easyload:0.0.2'
     //implementation project(path: ':easyload')
 
 }

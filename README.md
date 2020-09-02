@@ -11,6 +11,7 @@ EasyLoad
 
 
 * :heavy_check_mark:支持Activity、Fragment和View
+* :heavy_check_mark:极简使用方式，一行代码注入
 * :heavy_check_mark:支持全局状态(全局生效)和局部状态(只在当前页面生效，其他页面调用会报错)
 * :heavy_check_mark:对布局文件零入侵
 * :heavy_check_mark:支持子线程切换状态
@@ -24,7 +25,7 @@ EasyLoad
 
 #### 添加依赖
 ```
-implementation 'com.xu.easyload:easyload:0.0.1'
+implementation 'com.xu.easyload:easyload:0.0.2'
 ```
 
 #### 一、全局配置
@@ -35,11 +36,21 @@ implementation 'com.xu.easyload:easyload:0.0.1'
 class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        //初始化方式①
         EasyLoad.initGlobal()
                 .addGlobalState(ErrorState())//添加错误布局状态
                 .addGlobalState(EmptyState())//添加空布局状态
                 .addGlobalState(LoadingState())//添加加载布局状态
                 .setGlobalDefaultState(LoadingState::class.java)//设置默认全局
+
+        //初始化方式②，两种只能选一种，不能初始化两次，否则报错
+        initEasyLoad {
+            addGlobalState(ErrorState())
+            addGlobalState(EmptyState())
+            addGlobalState(LoadingState())
+            addGlobalState(NoInternetState())
+            setGlobalDefaultState(LoadingState::class.java)
+        }
     }
 }
 ```
@@ -66,6 +77,11 @@ class EmptyState : BaseState() {
 ```kotlin
   val service = EasyLoad.initLocal()
                 .inject(this)
+  //或更简单通过扩展函数的方式注入
+  val service =inject(this)
+  //展示状态
+  service.showState(xxxState::class.java)
+  service.showSuccess()
 ```
 完整用法
 
@@ -141,6 +157,15 @@ class EmptyState : BaseState() {
                 //ConstraintLayout 2.0版本以上，会出现不显示的问题，可以通过设置specialSupport为true来支持,会损失性能
                 //.specialSupport(true)
                 .inject(cl_child)
+        //扩展函数的方式注入
+        val service= inject(xxView) {
+              addLocalState(LoadingState2())
+              setLocalDefaultState(LoadingState2::class.java)
+              specialSupport(true)
+              setOnReloadListener { iLoadService, clickState, view ->
+
+              }
+        }
 ```
 
 **具体使用方法见Demo**，欢迎各位大佬 **Star、提问题**

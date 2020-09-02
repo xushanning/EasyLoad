@@ -1,9 +1,6 @@
 package com.example.easyload.ui
 
 import android.os.Handler
-import android.view.Gravity
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.easyload.BaseActivity
 import com.example.easyload.DelayUtil
 import com.example.easyload.R
@@ -11,6 +8,7 @@ import com.example.easyload.states.ErrorState
 import com.example.easyload.states.LoadingState
 import com.example.easyload.states.LoadingState2
 import com.xu.easyload.EasyLoad
+import com.xu.easyload.ext.inject
 import com.xu.easyload.state.SuccessState
 import kotlinx.android.synthetic.main.activity_view.*
 
@@ -24,17 +22,21 @@ class ViewActivity : BaseActivity() {
     }
 
     override fun initView() {
+
         //ConstraintLayout img
-        val sClImg = EasyLoad.initLocal()
-                .inject(img_view) {
-                    setOnReloadListener { iLoadService, clickState, view ->
-                        println("重新加载")
-                        iLoadService.showState(LoadingState::class.java)
-                        Handler().postDelayed({
-                            iLoadService.showState(SuccessState::class.java)
-                        }, 3000)
-                    }
-                }
+        //注入方法①
+//        val sClImg = EasyLoad.initLocal()
+//                .inject(img_view) {
+        //注入方法②
+        val sClImg = inject(img_view) {
+            setOnReloadListener { iLoadService, clickState, view ->
+                println("重新加载")
+                iLoadService.showState(LoadingState::class.java)
+                Handler().postDelayed({
+                    iLoadService.showState(SuccessState::class.java)
+                }, 3000)
+            }
+        }
         DelayUtil.delay(sClImg, ErrorState::class.java, 3500)
 
 
@@ -42,14 +44,24 @@ class ViewActivity : BaseActivity() {
                 .inject(tv_long2)
         DelayUtil.delay(sRelativeTv, SuccessState::class.java, 4500)
 
-        val sRelativeImg = EasyLoad.initLocal()
-                .addLocalState(LoadingState2())
-                .setLocalDefaultState(LoadingState2::class.java)
-                .inject(img_relative) {
-                    setOnReloadListener { iLoadService, clickState, view ->
+//        val sRelativeImg = EasyLoad.initLocal()
+//                .addLocalState(LoadingState2())
+//                .setLocalDefaultState(LoadingState2::class.java)
+//                .inject(img_relative) {
+//                    specialSupport(true)
+//                    setOnReloadListener { iLoadService, clickState, view ->
+//
+//                    }
+//                }
+        val sRelativeImg = inject(img_relative) {
+            addLocalState(LoadingState2())
+            setLocalDefaultState(LoadingState2::class.java)
+            specialSupport(true)
+            setOnReloadListener { iLoadService, clickState, view ->
 
-                    }
-                }
+            }
+        }
+
 
         DelayUtil.delay(sRelativeImg, SuccessState::class.java, 5000)
 
